@@ -1,15 +1,11 @@
 package com.frakseno.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -27,11 +23,21 @@ public class Restaurant {
     @NotNull
     private String zipCode;
 
-    private String address;
+    @Transient
+    @JsonIgnore
+    private String fullAddress;
+
+    private String streetNumber;
+
+    private String streetName;
 
     private String city;
 
     private String state;
+
+    private Double latitude;
+
+    private Double longitude;
 
     @ManyToOne
     private Neighborhood neighborhood;

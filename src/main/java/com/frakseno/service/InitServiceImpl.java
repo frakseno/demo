@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import java.util.List;
 public class InitServiceImpl implements InitService {
     private static final Logger log = LoggerFactory.getLogger(InitServiceImpl.class);
 
+    private static final String ADDRESS_FORMAT = "{0}, {1}, {2} {3}";
 
     private static final String NEIGHBORHOOD_FIELD = "neighborhood";
     private static final String NAME_FIELD = "name";
@@ -60,13 +62,18 @@ public class InitServiceImpl implements InitService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private LocationService locationService;
+
     @Override
     public void loadNeighborhoodData() {
         List<JsonNode> jsonNodes = loadJsonData(neibothoodDataUrl);
         List<Neighborhood> neighborhoods = new ArrayList<>();
 
         for(JsonNode jsonNode : jsonNodes) {
-            neighborhoods.add(convertNeighborhood(jsonNode));
+            Neighborhood neighborhood = convertNeighborhood(jsonNode);
+
+            neighborhoods.add(neighborhood);
         }
 
         neighborhoodRepository.save(neighborhoods);
@@ -97,7 +104,14 @@ public class InitServiceImpl implements InitService {
             Restaurant restaurant = convertRestaurantData(jsonNode);
 
             if(restaurant != null) {
-                restaurants.add(restaurant);
+                try {
+                    locationService.verifyRestaurantLocation(restaurant);
+
+                    restaurants.add(restaurant);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -141,7 +155,7 @@ public class InitServiceImpl implements InitService {
     private Museum convertMuseumData(JsonNode jsonNode) {
         Museum museum = new Museum();
         museum.setName(jsonNode.path(NAME_FIELD).asText());
-        museum.setAddress(jsonNode.path(ADDRESS_FIELD).asText());
+        museum.setStreetName(jsonNode.path(ADDRESS_FIELD).asText());
         museum.setCity(jsonNode.path(CITY_FIELD).asText());
         museum.setState(jsonNode.path(STATE_FIELD).asText());
         museum.setZipCode(jsonNode.path(ZIP_FIELD).asText());
@@ -160,11 +174,15 @@ public class InitServiceImpl implements InitService {
 
     private Restaurant convertRestaurantData(JsonNode jsonNode) {
         Restaurant restaurant = new Restaurant();
+
         restaurant.setName(jsonNode.path(NAME_FIELD).asText());
-        restaurant.setAddress(jsonNode.path(ADDRESS_FIELD).asText());
-        restaurant.setCity(jsonNode.path(CITY_FIELD).asText());
-        restaurant.setState(jsonNode.path(STATE_FIELD).asText());
-        restaurant.setZipCode(jsonNode.path(ZIP_FIELD).asText());
+
+        restaurant.setFullAddress(
+                MessageFormat.format(
+                        ADDRESS_FORMAT, jsonNode.path(ADDRESS_FIELD).asText(),
+                                        jsonNode.path(CITY_FIELD).asText(),
+                                        jsonNode.path(STATE_FIELD).asText(),
+                                        jsonNode.path(ZIP_FIELD).asText()));
 
         String neighborhoodName = jsonNode.path(NEIGHBORHOOD_FIELD).asText();
         Neighborhood neighborhood = neighborhoodRepository.findByName(neighborhoodName);

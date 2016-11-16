@@ -4,16 +4,8 @@ import com.frakseno.model.Museum;
 import com.frakseno.model.Neighborhood;
 import com.frakseno.model.Restaurant;
 import com.frakseno.service.DataService;
-import com.frakseno.service.InitService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 @RestController
 public class DataController {

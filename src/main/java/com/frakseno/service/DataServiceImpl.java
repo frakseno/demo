@@ -59,7 +59,8 @@ public class DataServiceImpl implements DataService{
 
         restaurant.setName(updatedRestaurant.getName());
         restaurant.setZipCode(updatedRestaurant.getZipCode());
-        restaurant.setAddress(updatedRestaurant.getAddress());
+        restaurant.setStreetNumber(updatedRestaurant.getStreetNumber());
+        restaurant.setStreetName(updatedRestaurant.getStreetName());
         restaurant.setCity(updatedRestaurant.getCity());
         restaurant.setState(updatedRestaurant.getState());
 
