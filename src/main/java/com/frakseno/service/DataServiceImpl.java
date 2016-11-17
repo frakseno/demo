@@ -1,11 +1,10 @@
 package com.frakseno.service;
 
-import com.frakseno.model.Museum;
+import com.frakseno.model.Building;
+import com.frakseno.model.BuildingType;
 import com.frakseno.model.Neighborhood;
-import com.frakseno.model.Restaurant;
-import com.frakseno.repository.MuseumRepository;
+import com.frakseno.repository.BuildingRepository;
 import com.frakseno.repository.NeighborhoodRepository;
-import com.frakseno.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +16,7 @@ public class DataServiceImpl implements DataService{
     private NeighborhoodRepository neighborhoodRepository;
 
     @Autowired
-    private MuseumRepository museumRepository;
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private BuildingRepository buildingRepository;
 
     @Override
     public Iterable<Neighborhood> getNeighborhoods() {
@@ -28,34 +24,34 @@ public class DataServiceImpl implements DataService{
     }
 
     @Override
-    public Iterable<Museum> getMuseums() {
-        return museumRepository.findAll();
+    public Iterable<Building> getMuseums() {
+        return buildingRepository.findByBuildingTypeOrderByName(BuildingType.MUSEUM);
     }
 
     @Override
-    public Iterable<Restaurant> getRestaurantsForNeighborhood(Long neighbordhoodId) {
+    public Iterable<Building> getRestaurantsForNeighborhood(Long neighbordhoodId) {
         Neighborhood neighborhood = neighborhoodRepository.findOne(neighbordhoodId);
 
-        return restaurantRepository.findByNeighborhood(neighborhood);
+        return buildingRepository.findByNeighborhoodAndBuildingTypeOrderByName(neighborhood, BuildingType.RESTAURANT);
     }
 
     @Override
-    public Restaurant getRestaurantDetails(Long restaurantId) {
-        return restaurantRepository.findOne(restaurantId);
+    public Building getRestaurantDetails(Long restaurantId) {
+        return buildingRepository.findOne(restaurantId);
     }
 
     @Override
-    public Restaurant saveNewRestaurant(Restaurant restaurant) {
+    public Building saveNewRestaurant(Building restaurant) {
         Neighborhood neighborhood = neighborhoodRepository.findOne(restaurant.getNeighborhood().getId());
 
         restaurant.setNeighborhood(neighborhood);
 
-        return restaurantRepository.save(restaurant);
+        return buildingRepository.save(restaurant);
     }
 
     @Override
-    public Restaurant updateRestaurant(Long restaurantId, Restaurant updatedRestaurant) {
-        Restaurant restaurant = restaurantRepository.findOne(restaurantId);
+    public Building updateRestaurant(Long restaurantId, Building updatedRestaurant) {
+        Building restaurant = buildingRepository.findOne(restaurantId);
 
         restaurant.setName(updatedRestaurant.getName());
         restaurant.setZipCode(updatedRestaurant.getZipCode());
@@ -64,11 +60,11 @@ public class DataServiceImpl implements DataService{
         restaurant.setCity(updatedRestaurant.getCity());
         restaurant.setState(updatedRestaurant.getState());
 
-        return restaurantRepository.save(restaurant);
+        return buildingRepository.save(restaurant);
     }
 
     @Override
     public void deleteRestaurant(Long restaurantId) {
-        restaurantRepository.delete(restaurantId);
+        buildingRepository.delete(restaurantId);
     }
 }

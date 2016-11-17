@@ -8,10 +8,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "museums")
+@Table(name = "buildings")
 @Data
 @NoArgsConstructor
-public class Museum {
+public class Building {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -20,13 +20,17 @@ public class Museum {
     private String name;
 
     @NotNull
+    @Enumerated(EnumType.STRING)
+    private BuildingType buildingType;
+
+    @NotNull
     private String zipCode;
 
     @Transient
     @JsonIgnore
     private String fullAddress;
 
-    private String streeNumber;
+    private String streetNumber;
 
     private String streetName;
 
@@ -38,6 +42,7 @@ public class Museum {
 
     private Double longitude;
 
+    @NotNull
     @ManyToOne
     private Neighborhood neighborhood;
 }
