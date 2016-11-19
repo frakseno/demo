@@ -1,8 +1,6 @@
 package com.frakseno.repository;
 
 import com.frakseno.model.Neighborhood;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 
@@ -11,13 +9,13 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface NeighborhoodRepository extends CrudRepository<Neighborhood, Long> {
     @Cacheable("neighborhoods")
-    public Neighborhood findByName(String name);
-
-    @Override
-    @CachePut("neighborhoods")
-    Neighborhood save(Neighborhood var1);
-
-    @Override
-    @CacheEvict("neighborhoods")
-    void deleteAll();
+    Neighborhood findByName(String name);
+//
+//    @Override
+//    @CachePut("neighborhoods")
+//    public Neighborhood save(Neighborhood neighborhood);
+//
+//    @Override
+//    @CacheEvict("neighborhoods")
+//    public void deleteAll();
 }

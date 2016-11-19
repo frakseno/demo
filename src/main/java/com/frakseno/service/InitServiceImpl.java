@@ -31,8 +31,6 @@ import java.util.List;
 public class InitServiceImpl implements InitService {
     private static final Logger log = LoggerFactory.getLogger(InitServiceImpl.class);
 
-    private static final String ADDRESS_FORMAT = "{0}, {1}, {2} {3}";
-
     private static final String NEIGHBORHOOD_FIELD = "neighborhood";
     private static final String NAME_FIELD = "name";
     private static final String ADDRESS_FIELD = "location_1_location";
@@ -143,12 +141,10 @@ public class InitServiceImpl implements InitService {
         Building building = new Building();
         building.setBuildingType(buildingType);
         building.setName(jsonNode.path(NAME_FIELD).asText());
-        building.setFullAddress(
-                MessageFormat.format(
-                        ADDRESS_FORMAT, jsonNode.path(ADDRESS_FIELD).asText(),
-                        jsonNode.path(CITY_FIELD).asText(),
-                        jsonNode.path(STATE_FIELD).asText(),
-                        jsonNode.path(ZIP_FIELD).asText()));
+        building.setFullAddress(jsonNode.path(ADDRESS_FIELD).asText() + ", " +
+                        jsonNode.path(CITY_FIELD).asText() + ", " +
+                        jsonNode.path(STATE_FIELD).asText() + ", " +
+                        jsonNode.path(ZIP_FIELD).asText());
 
         String neighborhoodName = jsonNode.path(NEIGHBORHOOD_FIELD).asText();
         Neighborhood neighborhood = neighborhoodRepository.findByName(neighborhoodName);
