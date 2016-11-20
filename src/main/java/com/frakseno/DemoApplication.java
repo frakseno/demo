@@ -14,8 +14,6 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @ConfigurationProperties(prefix = "com.frakseno")
 public class DemoApplication {
-	private static final Logger log = LoggerFactory.getLogger(DemoApplication.class);
-
     @Setter
     private String googleApiKey;
 

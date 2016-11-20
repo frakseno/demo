@@ -31,7 +31,6 @@ public class DataController {
         return buildingRepository.findByNeighborhoodIdAndBuildingTypeOrderByName(neighborhoodId, BuildingType.RESTAURANT);
     }
 
-
     @RequestMapping(value = "/buildings", method = RequestMethod.POST)
     public Building saveNewBuilding(@RequestBody Building building) {
         return buildingRepository.save(building);
@@ -39,7 +38,7 @@ public class DataController {
 
     @RequestMapping(value = "/buildings/{id}", method = RequestMethod.GET)
     public Building getBuilding(@PathVariable("id") Long id) {
-        return buildingRepository.findOne(id);
+        return buildingRepository.getOne(id);
     }
 
     @RequestMapping(value = "/buildings/{id}", method = RequestMethod.PUT)
