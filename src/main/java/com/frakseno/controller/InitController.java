@@ -19,7 +19,6 @@ public class InitController {
         initService.loadNeighborhoodData();
         initService.loadMuseumData();
         initService.loadRestaurantData();
-
     }
 
     @RequestMapping(method = RequestMethod.GET)

@@ -1,12 +1,11 @@
 package com.frakseno.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.frakseno.model.Museum;
+import com.frakseno.model.Building;
+import com.frakseno.model.BuildingType;
 import com.frakseno.model.Neighborhood;
-import com.frakseno.model.Restaurant;
-import com.frakseno.repository.MuseumRepository;
+import com.frakseno.repository.BuildingRepository;
 import com.frakseno.repository.NeighborhoodRepository;
-import com.frakseno.repository.RestaurantRepository;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +31,6 @@ import java.util.List;
 public class InitServiceImpl implements InitService {
     private static final Logger log = LoggerFactory.getLogger(InitServiceImpl.class);
 
-    private static final String ADDRESS_FORMAT = "{0}, {1}, {2} {3}";
-
     private static final String NEIGHBORHOOD_FIELD = "neighborhood";
     private static final String NAME_FIELD = "name";
     private static final String ADDRESS_FIELD = "location_1_location";
@@ -57,10 +54,7 @@ public class InitServiceImpl implements InitService {
     private NeighborhoodRepository neighborhoodRepository;
 
     @Autowired
-    private MuseumRepository museumRepository;
-
-    @Autowired
-    private RestaurantRepository restaurantRepository;
+    private BuildingRepository buildingRepository;
 
     @Autowired
     private LocationService locationService;
@@ -81,33 +75,25 @@ public class InitServiceImpl implements InitService {
 
     @Override
     public void loadMuseumData() {
-        List<JsonNode> jsonNodes = loadJsonData(museumDataUrl);
-        List<Museum> museums = new ArrayList<>();
-
-        for(JsonNode jsonNode : jsonNodes) {
-            Museum museum = convertMuseumData(jsonNode);
-
-            if(museum != null) {
-                museums.add(museum);
-            }
-        }
-
-        museumRepository.save(museums);
+        loadBuildingData(BuildingType.MUSEUM);
     }
 
     @Override
     public void loadRestaurantData() {
-        List<JsonNode> jsonNodes = loadJsonData(restaurantDataUrl);
-        List<Restaurant> restaurants = new ArrayList<>();
+        loadBuildingData(BuildingType.RESTAURANT);
+    }
+    private void loadBuildingData(BuildingType buildingType) {
+        List<JsonNode> jsonNodes = loadJsonData(getBuildingDataUrl(buildingType));
+        List<Building> buildings = new ArrayList<>();
 
         for(JsonNode jsonNode : jsonNodes) {
-            Restaurant restaurant = convertRestaurantData(jsonNode);
+            Building building = convertBuildingData(jsonNode, buildingType);
 
-            if(restaurant != null) {
+            if(building != null) {
                 try {
-                    locationService.verifyRestaurantLocation(restaurant);
+                    locationService.verifyBuildingLocation(building);
 
-                    restaurants.add(restaurant);
+                    buildings.add(building);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -115,21 +101,20 @@ public class InitServiceImpl implements InitService {
             }
         }
 
-        restaurantRepository.save(restaurants);
+        buildingRepository.save(buildings);
     }
 
     @Override
     public void clearData() {
+        buildingRepository.deleteAll();
         neighborhoodRepository.deleteAll();
-        museumRepository.deleteAll();
-        restaurantRepository.deleteAll();
     }
 
     @Override
     public boolean isDataInitialized() {
         if (neighborhoodRepository.count() == 0) {
             return false;
-        } else if (museumRepository.count() == 0) {
+        } else if (buildingRepository.count() == 0) {
             return false;
         } else {
             return true;
@@ -152,47 +137,32 @@ public class InitServiceImpl implements InitService {
         return neighborhood;
     }
 
-    private Museum convertMuseumData(JsonNode jsonNode) {
-        Museum museum = new Museum();
-        museum.setName(jsonNode.path(NAME_FIELD).asText());
-        museum.setStreetName(jsonNode.path(ADDRESS_FIELD).asText());
-        museum.setCity(jsonNode.path(CITY_FIELD).asText());
-        museum.setState(jsonNode.path(STATE_FIELD).asText());
-        museum.setZipCode(jsonNode.path(ZIP_FIELD).asText());
+    private Building convertBuildingData(JsonNode jsonNode, BuildingType buildingType) {
+        Building building = new Building();
+        building.setBuildingType(buildingType);
+        building.setName(jsonNode.path(NAME_FIELD).asText());
+        building.setFullAddress(jsonNode.path(ADDRESS_FIELD).asText() + ", " +
+                        jsonNode.path(CITY_FIELD).asText() + ", " +
+                        jsonNode.path(STATE_FIELD).asText() + ", " +
+                        jsonNode.path(ZIP_FIELD).asText());
 
         String neighborhoodName = jsonNode.path(NEIGHBORHOOD_FIELD).asText();
         Neighborhood neighborhood = neighborhoodRepository.findByName(neighborhoodName);
 
         if(neighborhood == null) {
-            museum = null;
+            building = null;
         } else {
-            museum.setNeighborhood(neighborhood);
+            building.setNeighborhood(neighborhood);
         }
 
-        return museum;
+        return building;
     }
 
-    private Restaurant convertRestaurantData(JsonNode jsonNode) {
-        Restaurant restaurant = new Restaurant();
-
-        restaurant.setName(jsonNode.path(NAME_FIELD).asText());
-
-        restaurant.setFullAddress(
-                MessageFormat.format(
-                        ADDRESS_FORMAT, jsonNode.path(ADDRESS_FIELD).asText(),
-                                        jsonNode.path(CITY_FIELD).asText(),
-                                        jsonNode.path(STATE_FIELD).asText(),
-                                        jsonNode.path(ZIP_FIELD).asText()));
-
-        String neighborhoodName = jsonNode.path(NEIGHBORHOOD_FIELD).asText();
-        Neighborhood neighborhood = neighborhoodRepository.findByName(neighborhoodName);
-
-        if(neighborhood == null) {
-            restaurant = null;
+    private String getBuildingDataUrl(BuildingType buildingType) {
+        if(buildingType == (BuildingType.MUSEUM)) {
+            return museumDataUrl;
         } else {
-            restaurant.setNeighborhood(neighborhood);
+            return restaurantDataUrl;
         }
-
-        return restaurant;
     }
 }
