@@ -1,0 +1,17 @@
+<div class="modal-header">
+    <h4>{{$restaurantPopupController.headerText}}</h4>
+</div>
+<form novalidate class="simple-form">
+    <div class="modal-body">
+        <label>Name: <input type="text" ng-model="$restaurantPopupController.restaurant.name" /></label><br />
+        <label>Street Number: <input type="text" ng-model="$restaurantPopupController.restaurant.streetNumber" /></label><br />
+        <label>Street Name: <input type="text" ng-model="$restaurantPopupController.restaurant.streetName" /></label><br />
+        <label>City: <input type="text" ng-model="$restaurantPopupController.restaurant.city" /></label><br />
+        <label>State: <input type="text" ng-model="$restaurantPopupController.restaurant.state" /></label><br />
+        <label>Zip: <input type="text" ng-model="$restaurantPopupController.restaurant.zipCode" /></label><br />
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="$restaurantPopupController.save()">Save</button>
+        <button class="btn btn-default" ng-click="$restaurantPopupController.cancel()">Cancel</button>
+    </div>
+</form>

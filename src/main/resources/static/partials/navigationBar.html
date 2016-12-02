@@ -1,0 +1,15 @@
+<nav class="navbar navbar-default clearfix" ng-controller="NavigationBarController as $navigationBarController">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand">Welcome</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right" ng-show="$navigationBarController.showMenu">
+            <li uib-dropdown>
+                <a href id="menu-dropdown" uib-dropdown-toggle>Menu<span class="caret"></span></a>
+                <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="menu-dropdown">
+                    <li role="menuitem"><a href="#" ng-click="$navigationBarController.openResetDataPopup()">Reset Data</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>

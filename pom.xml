@@ -27,10 +27,10 @@
 	</properties>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-starter-thymeleaf</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -119,6 +119,31 @@
 			<artifactId>angular-utils-pagination</artifactId>
 			<version>0.11.1</version>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.webjars.bower</groupId>-->
+			<!--<artifactId>angular-simple-logger</artifactId>-->
+			<!--<version>0.1.7</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.webjars.bower</groupId>-->
+			<!--<artifactId>lodash</artifactId>-->
+			<!--<version>4.17.2</version>-->
+		<!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars.bower</groupId>-->
+            <!--<artifactId>angular-google-maps</artifactId>-->
+            <!--<version>2.4.0</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars.npm</groupId>-->
+            <!--<artifactId>github-com-nmccready-google-maps-utility-library-v3-infobox</artifactId>-->
+            <!--<version>1.1.14</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.webjars.npm</groupId>-->
+            <!--<artifactId>github-com-nmccready-google-maps-utility-library-v3-keydragzoom</artifactId>-->
+            <!--<version>2.0.9</version>-->
+        <!--</dependency>-->
 	</dependencies>
 
 	<build>

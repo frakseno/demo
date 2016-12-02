@@ -30,9 +30,9 @@ public class InitController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-
-    @RequestMapping(path = "/init", method = RequestMethod.DELETE)
-    public void resetData() {
-        initService.clearData();
-    }
+//
+//    @RequestMapping(path = "/init", method = RequestMethod.DELETE)
+//    public void resetData() {
+//        initService.clearData();
+//    }
 }

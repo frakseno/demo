@@ -1,79 +1,49 @@
 angular.module('app.ui', ['ngAnimate', 'ngSanitize', 'ui.bootstrap', 'ngResource', 'ngRoute', 'spring-data-rest',
-    'angularUtils.directives.dirPagination']);
+        'angularUtils.directives.dirPagination']);
 
-angular.module('app.ui').controller('navController', function ($scope, $uibModal, $log) {
-    $scope.openResetDataConfirm = function () {
-        $log.info('opening pop up');
-        var modalInstance = $uibModal.open({
-            templateUrl: 'resetDataConfirm.html',
-            controller: 'popupController',
-        });
-
-        modalInstance.result.then(function (resetData) {
-            $log.info("Reset the Data");
-        });
+angular.module('app.ui').filter('captureItems', function() {
+    return function(array, property, target) {
+        if (target && property) {
+            target[property] = array;
+        }
+        return array;
     }
 });
-
-angular.module('app.ui').controller('popupController', function ($scope, $uibModalInstance) {
-    $scope.ok = function () {
-        $uibModalInstance.close(true);
-    };
-
-    $scope.cancel = function () {
-        $uibModalInstance.dismiss('cancel');
-    };
-});
-
-
-angular.module('app.ui').controller('dataController', function ($scope, $http, SpringDataRestAdapter, $log) {
-    $scope.loadButtonHidden = true;
-    $scope.restaurantPanelHidden = true;
-    $scope.selectedNeighborhood = '';
-
-    function loadMuseums() {
-        var httpPromise = $http.get('/data/buildings/search/findByBuildingTypeOrderByName?buildingType=MUSEUM').success(function (response) {
-            // $scope.response = angular.toJson(response, true);
-        });
-
-        SpringDataRestAdapter.process(httpPromise, 'neighborhood', true).then(function (processedResponse) {
-            $scope.museums = processedResponse._embeddedItems;
-            // $scope.processedResponse = angular.toJson(processedResponse, true);
-        });
-    }
-
-    loadMuseums();
-
-    function loadRestaurantForNeighborhood(neighborhood) {
-        $log.info("Selected neighborhood: " + neighborhood);
-
-        $http.get('/data/buildings/search/findByNeighborhoodNameAndBuildingTypeOrderByName?buildingType=RESTAURANT&neighborhoodName=' + neighborhood).
-            success(function (data) {
-            $scope.restaurants = data._embedded.buildings;
-
-            $log.info("restaurants: " + data);
-        });
-    }
-
-    $scope.loadRestaurants = function() {
-        loadRestaurantForNeighborhood($scope.selectedNeighborhood);
-
-        $scope.restaurantPanelHidden = false;
-    }
-
-    $scope.museumSort = function(keyname){
-        $scope.museumSortKey = keyname;   //set the sortKey to the param passed
-        $scope.museumReverse = !$scope.museumReverse; //if true make it false and vice versa
-    }
-
-    $scope.restaurantSort = function(keyname){
-        $scope.restaurantSortKey = keyname;   //set the sortKey to the param passed
-        $scope.restaurantReverse = !$scope.restaurantReverse; //if true make it false and vice versa
-    }
-
-    $scope.selectMuseum = function(museum) {
-        $scope.selectedNeighborhood = museum.neighborhood.name;
-        $scope.loadButtonHidden = false;
-
-    }
-});
+//
+// angular.module('app.ui').service('Map', function($q) {
+//     this.init = function(latitude, longitude) {
+//         var options = {
+//             center: new google.maps.LatLng(latitude, longitude),
+//             zoom: 11,
+//             disableDefaultUI: true
+//         }
+//
+//         this.map = new google.maps.Map(
+//             document.getElementById("map"), options
+//         );
+//
+//         this.places = new google.maps.places.PlacesService(this.map);
+//     }
+//
+//     this.search = function(str) {
+//         var d = $q.defer();
+//         this.places.textSearch({query: str}, function(results, status) {
+//             if (status == 'OK') {
+//                 d.resolve(results[0]);
+//             }
+//             else d.reject(status);
+//         });
+//         return d.promise;
+//     }
+//
+//     this.addMarker = function(res) {
+//         if(this.marker) this.marker.setMap(null);
+//         this.marker = new google.maps.Marker({
+//             map: this.map,
+//             position: res.geometry.location,
+//             animation: google.maps.Animation.DROP
+//         });
+//         this.map.setCenter(res.geometry.location);
+//     }
+//
+// });
