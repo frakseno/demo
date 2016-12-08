@@ -1,0 +1,10 @@
+<div class="modal-header" >
+    <h4>Delete Restaurant</h4>
+</div>
+<div class="modal-body">
+    Are you sure you want to delete {{$deleteRestaurantPopupController.restaurant.name}}?
+</div>
+<div class="modal-footer">
+    <button class="btn btn-danger" ng-click="$deleteRestaurantPopupController.ok()">OK</button>
+    <button class="btn btn-default" ng-click="$deleteRestaurantPopupController.cancel()">Cancel</button>
+</div>

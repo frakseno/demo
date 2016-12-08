@@ -43,6 +43,6 @@ public class Building {
     private Double longitude;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne()
     private Neighborhood neighborhood;
 }
