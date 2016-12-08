@@ -54,9 +54,9 @@ angular.module('app.ui').controller('MapPopupController', function ($uibModalIns
         });
 
 
-        // var infowindow = new google.maps.InfoWindow();
-        // infowindow.setContent(building.name);
-        // infowindow.open(this.map, marker);
+        var infowindow = new google.maps.InfoWindow();
+        infowindow.setContent(building.name);
+        infowindow.open(this.map, marker);
 
         this.map.fitBounds(this.bounds);
         this.map.panToBounds(this.bounds);

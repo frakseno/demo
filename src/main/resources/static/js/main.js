@@ -2,7 +2,6 @@ angular.module('app.ui').controller('MainController',
     function ($http, SpringDataRestAdapter, $uibModal, $location, $anchorScroll, $log) {
     var $mainController = this;
 
-    this.loadButtonHidden = true;
     this.restaurantPanelHidden = true;
 
     function loadMuseums() {
@@ -46,7 +45,6 @@ angular.module('app.ui').controller('MainController',
 
     this.selectMuseum = function(museum) {
         $mainController.selectedMuseum = museum;
-        $mainController.loadButtonHidden = false;
 
     }
 
