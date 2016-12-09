@@ -10,12 +10,4 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long> {
     @Cacheable("neighborhoods")
     Neighborhood findByName(@Param("name") String name);
-//
-//    @Override
-//    @CachePut("neighborhoods")
-//    public Neighborhood save(Neighborhood neighborhood);
-//
-//    @Override
-//    @CacheEvict("neighborhoods")
-//    public void deleteAll();
 }

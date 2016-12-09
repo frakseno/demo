@@ -4,7 +4,6 @@ import com.frakseno.service.InitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,9 +16,8 @@ public class InitController {
     @RequestMapping(path = "/init", method = RequestMethod.POST)
     public void initializeData() {
         initService.clearData();
-        initService.loadNeighborhoodData();
-        initService.loadMuseumData();
-        initService.loadRestaurantData();
+
+        initService.initializeData();
     }
 
     @RequestMapping(path = "/init", method = RequestMethod.GET)
@@ -30,9 +28,4 @@ public class InitController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
-//
-//    @RequestMapping(path = "/init", method = RequestMethod.DELETE)
-//    public void resetData() {
-//        initService.clearData();
-//    }
 }

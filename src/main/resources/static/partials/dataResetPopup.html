@@ -1,11 +1,21 @@
-<div class="modal-header">
-    <h4>Reset Data</h4>
+<div ng-hide="$dataResetPopupController.showProgress">
+    <div class="modal-header">
+        <h4>Reset Data</h4>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure you want to reset all the data?</p>
+        <p>This might take a while...</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-danger" ng-click="$dataResetPopupController.resetData()">OK</button>
+        <button class="btn btn-default" ng-click="$dataResetPopupController.cancel()">Cancel</button>
+    </div>
 </div>
-<div class="modal-body">
-    <p>Are you sure you want to reset all the data?</p>
-    <p>This might take a while...</p>
-</div>
-<div class="modal-footer">
-    <button class="btn btn-danger" ng-click="$dataResetPopupController.ok()">OK</button>
-    <button class="btn btn-default" ng-click="$dataResetPopupController.cancel()">Cancel</button>
+<div ng-show="$dataResetPopupController.showProgress">
+    <div class="modal-header">
+        <h4>Resetting Data...</h4>
+    </div>
+    <div class="modal-body">
+        <uib-progressbar class="progress-striped active" value=""></uib-progressbar>
+    </div>
 </div>

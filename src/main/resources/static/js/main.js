@@ -1,21 +1,26 @@
 angular.module('app.ui').controller('MainController',
-    function ($http, SpringDataRestAdapter, $uibModal, $location, $anchorScroll, $log) {
+        function ($http, SpringDataRestAdapter, $uibModal, $location, $anchorScroll, CONFIG, $log, $rootScope) {
     var $mainController = this;
 
-    this.restaurantPanelHidden = true;
+    loadMuseums();
+
+    $rootScope.$on('dataResetComplete', function(event, data) {
+        loadMuseums();
+    });
 
     function loadMuseums() {
-        SpringDataRestAdapter.process($http.get('/data/buildings/search/findByBuildingTypeOrderByName?buildingType=MUSEUM'), 'neighborhood', false).then(function (processedResponse) {
+        this.restaurantPanelHidden = true;
+
+        SpringDataRestAdapter.process($http.get(CONFIG.URL.MUSEUM), 'neighborhood', false).then(function (processedResponse) {
             $mainController.museums = processedResponse._embeddedItems;
         });
     }
 
-    loadMuseums();
 
     this.loadRestaurantForNeighborhood = function() {
         $log.info("Selected neighborhood: " + $mainController.restaurantNeighborhood.name);
 
-        $http.get('/data/buildings/search/findByNeighborhoodNameAndBuildingTypeOrderByName?buildingType=RESTAURANT&neighborhoodName=' + $mainController.restaurantNeighborhood.name).
+        $http.get(CONFIG.URL.RESTAURNT + $mainController.restaurantNeighborhood.name).
         success(function (data) {
             $mainController.restaurants = data._embedded.buildings;
         });

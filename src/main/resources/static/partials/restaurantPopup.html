@@ -1,17 +1,38 @@
 <div class="modal-header">
     <h4>{{$restaurantPopupController.headerText}}</h4>
 </div>
-<form novalidate class="simple-form">
+<form class="simple-form" name="restaurantForm">
     <div class="modal-body">
-        <label>Name: <input type="text" ng-model="$restaurantPopupController.restaurant.name" /></label><br />
-        <label>Street Number: <input type="text" ng-model="$restaurantPopupController.restaurant.streetNumber" /></label><br />
-        <label>Street Name: <input type="text" ng-model="$restaurantPopupController.restaurant.streetName" /></label><br />
-        <label>City: <input type="text" ng-model="$restaurantPopupController.restaurant.city" /></label><br />
-        <label>State: <input type="text" ng-model="$restaurantPopupController.restaurant.state" /></label><br />
-        <label>Zip: <input type="text" ng-model="$restaurantPopupController.restaurant.zipCode" /></label><br />
+        <div class="form-group" ng-class="{ 'has-error' : restaurantForm.name.$invalid && !restaurantForm.name.$pristine }">
+            <label>Name</label>
+            <input type="text" name="name" class="form-control" ng-model="$restaurantPopupController.restaurant.name" required>
+            <p ng-show="restaurantForm.name.$invalid && !restaurantForm.name.$pristine" class="help-block">Name is required.</p>
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : restaurantForm.address.$invalid && !restaurantForm.address.$pristine }">
+            <label>Address</label>
+            <input type="text" name="address" class="form-control" ng-model="$restaurantPopupController.restaurant.address" required>
+            <p ng-show="restaurantForm.address.$invalid && !restaurantForm.address.$pristine" class="help-block">Address is required.</p>
+        </div>
+
+        <div class="form-group">
+            <label>City</label>
+            <input type="text" name="city" class="form-control" ng-model="$restaurantPopupController.restaurant.city" ng-disabled="true">
+        </div>
+
+        <div class="form-group">
+            <label>State</label>
+            <input type="text" name="state" class="form-control" ng-model="$restaurantPopupController.restaurant.state" ng-disabled="true">
+        </div>
+
+        <div class="form-group" ng-class="{ 'has-error' : restaurantForm.zipCode.$invalid && !restaurantForm.zipCode.$pristine }">
+            <label>Zip Code</label>
+            <input type="text" name="zipCode" class="form-control" ng-model="$restaurantPopupController.restaurant.zipCode" required ng-pattern="/^(\d{5}(-\d{4})?|[A-Z]\d[A-Z] *\d[A-Z]\d)$/">
+            <p ng-show="restaurantForm.zipCode.$invalid && !restaurantForm.zipCode.$pristine" class="help-block">Zip Code is required and needs to be in a proper format.</p>
+        </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="$restaurantPopupController.save()">Save</button>
+        <button class="btn btn-primary" ng-click="$restaurantPopupController.save()" ng-disabled="restaurantForm.$invalid">Save</button>
         <button class="btn btn-default" ng-click="$restaurantPopupController.cancel()">Cancel</button>
     </div>
 </form>

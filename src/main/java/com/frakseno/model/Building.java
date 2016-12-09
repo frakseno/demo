@@ -1,6 +1,5 @@
 package com.frakseno.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,24 +22,14 @@ public class Building {
     @Enumerated(EnumType.STRING)
     private BuildingType buildingType;
 
-    @NotNull
-    private String zipCode;
-
-    @Transient
-    @JsonIgnore
-    private String fullAddress;
-
-    private String streetNumber;
-
-    private String streetName;
+    private String address;
 
     private String city;
 
     private String state;
 
-    private Double latitude;
-
-    private Double longitude;
+    @NotNull
+    private String zipCode;
 
     @NotNull
     @ManyToOne()

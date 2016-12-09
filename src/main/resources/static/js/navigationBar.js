@@ -1,4 +1,4 @@
-angular.module('app.ui').controller('NavigationBarController', function ($uibModal, $log) {
+angular.module('app.ui').controller('NavigationBarController', function ($uibModal, $log, $rootScope) {
     this.showMenu = true;
 
     this.openResetDataPopup = function () {
@@ -9,10 +9,10 @@ angular.module('app.ui').controller('NavigationBarController', function ($uibMod
             controllerAs: '$dataResetPopupController'
         });
 
-        modalInstance.result.then(function (resetData) {
-            $log.info('Reset the Data: ' + resetData);
+        modalInstance.result.then(function () {
+            $rootScope.$broadcast('dataResetComplete');
         }, function () {
             $log.info('Modal dismissed at: ' + new Date());
         });
-    }
+    };
 });

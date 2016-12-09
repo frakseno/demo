@@ -7,8 +7,7 @@ import com.frakseno.model.Neighborhood;
 import com.frakseno.repository.BuildingRepository;
 import com.frakseno.repository.NeighborhoodRepository;
 import lombok.Setter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,18 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "com.frakseno")
 @Service("initService")
 @Transactional
+@Slf4j
 public class InitServiceImpl implements InitService {
-    private static final Logger log = LoggerFactory.getLogger(InitServiceImpl.class);
-
     private static final String NEIGHBORHOOD_FIELD = "neighborhood";
     private static final String NAME_FIELD = "name";
     private static final String ADDRESS_FIELD = "location_1_location";
@@ -39,7 +35,7 @@ public class InitServiceImpl implements InitService {
     private static final String ZIP_FIELD = "zipcode";
 
     @Setter
-    private String neibothoodDataUrl;
+    private String neiborhoodDataUrl;
 
     @Setter
     private String museumDataUrl;
@@ -56,52 +52,11 @@ public class InitServiceImpl implements InitService {
     @Autowired
     private BuildingRepository buildingRepository;
 
-    @Autowired
-    private LocationService locationService;
-
     @Override
-    public void loadNeighborhoodData() {
-        List<JsonNode> jsonNodes = loadJsonData(neibothoodDataUrl);
-        List<Neighborhood> neighborhoods = new ArrayList<>();
-
-        for(JsonNode jsonNode : jsonNodes) {
-            Neighborhood neighborhood = convertNeighborhood(jsonNode);
-
-            neighborhoods.add(neighborhood);
-        }
-
-        neighborhoodRepository.save(neighborhoods);
-    }
-
-    @Override
-    public void loadMuseumData() {
-        loadBuildingData(BuildingType.MUSEUM);
-    }
-
-    @Override
-    public void loadRestaurantData() {
-        loadBuildingData(BuildingType.RESTAURANT);
-    }
-    private void loadBuildingData(BuildingType buildingType) {
-        List<JsonNode> jsonNodes = loadJsonData(getBuildingDataUrl(buildingType));
-        List<Building> buildings = new ArrayList<>();
-
-        for(JsonNode jsonNode : jsonNodes) {
-            Building building = convertBuildingData(jsonNode, buildingType);
-
-            if(building != null) {
-                try {
-                    locationService.verifyBuildingLocation(building);
-
-                    buildings.add(building);
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        buildingRepository.save(buildings);
+    public void initializeData() {
+        loadNeighborhoodData();
+        loadMuseumData();
+        loadRestaurantData();
     }
 
     @Override
@@ -119,6 +74,48 @@ public class InitServiceImpl implements InitService {
         } else {
             return true;
         }
+    }
+
+    private void loadNeighborhoodData() {
+        List<JsonNode> jsonNodes = loadJsonData(neiborhoodDataUrl);
+        List<Neighborhood> neighborhoods = new ArrayList<>();
+
+        for(JsonNode jsonNode : jsonNodes) {
+            Neighborhood neighborhood = convertNeighborhood(jsonNode);
+
+            neighborhoods.add(neighborhood);
+        }
+
+        neighborhoodRepository.save(neighborhoods);
+    }
+
+    private void loadMuseumData() {
+        loadBuildingData(BuildingType.MUSEUM);
+    }
+
+
+    private void loadRestaurantData() {
+        loadBuildingData(BuildingType.RESTAURANT);
+    }
+
+    private void loadBuildingData(BuildingType buildingType) {
+        List<JsonNode> jsonNodes = loadJsonData(getBuildingDataUrl(buildingType));
+        List<Building> buildings = new ArrayList<>();
+
+        for(JsonNode jsonNode : jsonNodes) {
+            Building building = convertBuildingData(jsonNode, buildingType);
+
+            if(building != null) {
+                try {
+                    buildings.add(building);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        buildingRepository.save(buildings);
     }
 
     private List<JsonNode> loadJsonData(String dataUrl) {
@@ -141,10 +138,10 @@ public class InitServiceImpl implements InitService {
         Building building = new Building();
         building.setBuildingType(buildingType);
         building.setName(jsonNode.path(NAME_FIELD).asText());
-        building.setFullAddress(jsonNode.path(ADDRESS_FIELD).asText() + ", " +
-                        jsonNode.path(CITY_FIELD).asText() + ", " +
-                        jsonNode.path(STATE_FIELD).asText() + ", " +
-                        jsonNode.path(ZIP_FIELD).asText());
+        building.setAddress(jsonNode.path(ADDRESS_FIELD).asText());
+        building.setCity(jsonNode.path(CITY_FIELD).asText());
+        building.setState(jsonNode.path(STATE_FIELD).asText());
+        building.setZipCode(jsonNode.path(ZIP_FIELD).asText());
 
         String neighborhoodName = jsonNode.path(NEIGHBORHOOD_FIELD).asText();
         Neighborhood neighborhood = neighborhoodRepository.findByName(neighborhoodName);

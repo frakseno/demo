@@ -16,21 +16,15 @@
                         <span class="glyphicon sort-icon" ng-show="$mainController.museumSortKey=='name'" ng-class="{'glyphicon-chevron-up':$mainController.museumReverse,'glyphicon-chevron-down':!$mainController.museumReverse}"/></th>
                     <th ng-click="$mainController.museumSort('neighborhood.name')">Neighborhood
                         <span class="glyphicon sort-icon" ng-show="$mainController.museumSortKey=='neighborhood.name'" ng-class="{'glyphicon-chevron-up':$mainController.museumReverse,'glyphicon-chevron-down':!$mainController.museumReverse}"/></th>
-                    <!--<th>Address</th>-->
-                    <th></th>
+                    <th>Address</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr dir-paginate="museum in $mainController.museums|orderBy:$mainController.museumSortKey:$mainController.museumReverse|filter:searchMuseum|itemsPerPage:5"
                     pagination-id="museumPagination" ng-click="$mainController.loadRestaurants(museum)">
-                    <!--pagination-id="museumPagination" ng-mouseenter="showLoad=true" ng-mouseleave="showLoad=false">-->
                     <td>{{museum.name}}</td>
                     <td>{{museum.neighborhood.name}}</td>
-                    <td>{{museum.streetNumber}} {{museum.streetName}}<br/>{{museum.city}}, {{museum.state}} {{museum.zipCode}}</td>
-                    <!--<td><div class="pull-right">-->
-                        <!--<button class="btn btn-primary" ng-show="showLoad" ng-click="$mainController.loadRestaurants(museum)">Load Restaurants</button>-->
-                    <!--</div></td>-->
-
+                    <td>{{museum.address}}<br/>{{museum.city}}, {{museum.state}} {{museum.zipCode}}</td>
                 </tr>
                 </tbody>
             </table>
@@ -47,7 +41,6 @@
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
                 <h4 class="panel-title pull-left">Restaurants near {{$mainController.selectedMuseum.name}}</h4>
-                <!--<h4 class="panel-title pull-left">Restaurants in {{$mainController.restaurantNeighborhood.name}}</h4>-->
             </div>
             <div class="panel-body">
                 <form class="form-inline">
@@ -75,7 +68,7 @@
                         pagination-id="restaurantPagination" ng-mouseenter="showEdit=true" ng-mouseleave="showEdit=false"
                         current-page="$mainController.currentPage">
                         <td>{{restaurant.name}}</td>
-                        <td>{{restaurant.streetNumber}} {{restaurant.streetName}}<br/>{{restaurant.city}}, {{restaurant.state}} {{restaurant.zipCode}}</td>
+                        <td>{{restaurant.address}}<br/>{{restaurant.city}}, {{restaurant.state}} {{restaurant.zipCode}}</td>
                         <td><div class="pull-right" style="width: 145px">
                             <button class="btn btn-warning" ng-show="showEdit" ng-click="$mainController.openUpdateRestaurantPopup(restaurant)">Edit</button>
                             <button class="btn btn-danger" ng-show="showEdit" ng-click="$mainController.openDeleteRestaurantPopup(restaurant)">Delete</button>
