@@ -9,7 +9,10 @@ angular.module('app.ui').controller('MainController',
     });
 
     function loadMuseums() {
-        this.restaurantPanelHidden = true;
+        $mainController.restaurantPanelHidden = true;
+        $mainController.restaurants = null;
+        $mainController.selectedMuseum = null;
+        $mainController.restaurantNeighborhood = null;
 
         SpringDataRestAdapter.process($http.get(CONFIG.URL.MUSEUM), 'neighborhood', false).then(function (processedResponse) {
             $mainController.museums = processedResponse._embeddedItems;

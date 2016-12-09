@@ -14,10 +14,12 @@ public class InitController {
     InitService initService;
 
     @RequestMapping(path = "/init", method = RequestMethod.POST)
-    public void initializeData() {
+    public ResponseEntity initializeData() {
         initService.clearData();
 
         initService.initializeData();
+
+        return ResponseEntity.ok(null);
     }
 
     @RequestMapping(path = "/init", method = RequestMethod.GET)
