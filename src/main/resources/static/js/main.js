@@ -13,32 +13,32 @@ angular.module('app.ui').controller('MainController',
         $mainController.restaurants = null;
         $mainController.selectedMuseum = null;
         $mainController.restaurantNeighborhood = null;
+        $mainController.showMuseumProgress = true;
 
         SpringDataRestAdapter.process($http.get(CONFIG.URL.MUSEUM), 'neighborhood', false).then(function (processedResponse) {
             $mainController.museums = processedResponse._embeddedItems;
+            $mainController.showMuseumProgress = false;
         });
     }
 
-
-    this.loadRestaurantForNeighborhood = function() {
-        $log.info("Selected neighborhood: " + $mainController.restaurantNeighborhood.name);
-
-        $http.get(CONFIG.URL.RESTAURNT + $mainController.restaurantNeighborhood.name).
-        success(function (data) {
-            $mainController.restaurants = data._embedded.buildings;
-        });
-    }
 
     this.loadRestaurants = function(museum) {
-        $mainController.selectedMuseum = museum;
-        $mainController.restaurantNeighborhood = museum.neighborhood;
-        $mainController.loadRestaurantForNeighborhood();
-
         $mainController.restaurantPanelHidden = false;
 
-        $mainController.currentPage = 1;
+        $mainController.showRestaurantProgress = true;
+        $mainController.selectedMuseum = museum;
+        $mainController.restaurantNeighborhood = museum.neighborhood;
 
-        $mainController.goToRestaurants();
+        $http.get(CONFIG.URL.RESTAURNT + $mainController.restaurantNeighborhood.name).
+            success(function (data) {
+            $mainController.restaurants = data._embedded.buildings;
+            $mainController.showRestaurantProgress = false;
+
+            $mainController.currentPage = 1;
+
+            $mainController.goToRestaurants();
+
+        });
     }
 
     this.museumSort = function(keyname){

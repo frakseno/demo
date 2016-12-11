@@ -23,7 +23,6 @@
         <script src="/js/dataResetPopup.js"></script>
         <script src="/js/navigationBar.js"></script>
         <script src="/js/deleteRestaurantPopup.js"></script>
-        <script src="/js/dataState.js"></script>
         <script src="/js/addNewRestaurantPopup.js"></script>
         <script src="/js/updateRestaurantPopup.js"></script>
         <script src="/js/mapPopup.js"></script>
@@ -31,12 +30,13 @@
 
     <body ng-cloak>
         <div>
-            <div class="container" ng-controller="DataStateController as $dataStateController">
+            <div class="container">
                 <div ng-include="'partials/navigationBar.html'"></div>
 
                 <div ng-include="'partials/main.html'"></div>
             </div>
         </div>
+
         <script async defer src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDXDiyEtqca-oa9ap5V0EJ8uiyYbtT6UKU&libraries=places'></script>
     </body>
 </html>
